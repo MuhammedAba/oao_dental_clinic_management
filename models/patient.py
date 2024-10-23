@@ -23,3 +23,12 @@ class Patient(models.Model):
         ('b+', 'B with Rh-factor'),
     ], string="Blood Typing", required=1)
 
+    @api.depends('date_of_birth')
+    def compute_age(self):
+        if self.date_of_birth:
+            today = fields.Date.today()
+            age = today - self.date_of_birth
+            age_in_years = age.days // 365.25
+            self.age = f"{int(age_in_years)} Years Old"
+        else:
+            self.age = "No Date of Birth"
