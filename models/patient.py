@@ -7,6 +7,7 @@ class Patient(models.Model):
     _description = "Patients"
     _order = 'name desc'
 
+    patient_id = fields.Char(string="Patient ID", readonly=True, copy=False, default="New Patient")
     name = fields.Char(string="Patient Name", required=1)
     surname = fields.Char(string="Patient Surname", required=1)
     date_of_birth = fields.Date(string='Date Of Birth', default=date.today(), required=1)
@@ -32,3 +33,18 @@ class Patient(models.Model):
             self.age = f"{int(age_in_years)} Years Old"
         else:
             self.age = "No Date of Birth"
+
+    @api.model
+    def create(self, vals):
+        # Eğer patient_id boşsa
+        if not vals.get('patient_id'):
+            # SQL ile mevcut en yüksek patient_id'yi alıyoruz
+            self._cr.execute(
+                "SELECT COALESCE(MAX(CAST(SUBSTRING(patient_id, 4, LENGTH(patient_id)) AS INTEGER)), 0) FROM patient_patient")
+            max_id = self._cr.fetchone()[0]
+
+            # Yeni patient_id'yi oluşturuyoruz
+            new_id = max_id + 1
+            vals['patient_id'] = f'PAT{str(new_id).zfill(5)}'  # PAT00001 gibi
+
+        return super(Patient, self).create(vals)

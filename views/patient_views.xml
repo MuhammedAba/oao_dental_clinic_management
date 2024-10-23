@@ -5,6 +5,7 @@
         <field name="model">patient.patient</field>
         <field name="arch" type="xml">
             <tree string="Patient">
+                <field name="patient_id"/>
                 <field name="name"/>
                 <field name="surname"/>
                 <field name="date_of_birth"/>
