@@ -1,0 +1,95 @@
+<odoo>
+
+    <record id="view_patient_tree" model="ir.ui.view">
+        <field name="name">patient.tree</field>
+        <field name="model">patient.patient</field>
+        <field name="arch" type="xml">
+            <tree string="Patient">
+                <field name="name"/>
+                <field name="surname"/>
+                <field name="date_of_birth"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="gender"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_patient_form" model="ir.ui.view">
+        <field name="name">patient.form</field>
+        <field name="model">patient.patient</field>
+        <field name="arch" type="xml">
+            <form string="Patient">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar" />
+                    <div class="oe_title">
+                        <h1>
+                            Create new patient
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+
+                            <field name="name"/>
+                            <field name="surname"/>
+                            <field name="date_of_birth"/>
+                            <field name="age" readonly="1"/>
+                            <field name="gender"/>
+                            <field name="blood_type"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="note"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Patient Critical Information">
+                            <!-- Buraya hasta kritik bilgileri için alanlar eklenebilir -->
+                        </page>
+                        <page string="Medicines">
+                            <!-- Buraya ilaç bilgileri için alanlar eklenebilir -->
+                        </page>
+                        <page string="Diseases">
+                            <!-- Buraya hastalık bilgileri için alanlar eklenebilir -->
+                        </page>
+                        <page string="Prescriptions">
+                            <!-- Buraya reçete bilgileri için alanlar eklenebilir -->
+                        </page>
+                        <page string="Treatment Details">
+                            <!-- Buraya tedavi bilgileri için alanlar eklenebilir -->
+                        </page>
+                        <page string="Appointments">
+                            <!-- Buraya randevu bilgileri için alanlar eklenebilir -->
+                        </page>
+                        <page string="Payments">
+                            <!-- Buraya ödeme bilgileri için alanlar eklenebilir -->
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+   </record>
+
+    <record id="action_patient" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">patient.patient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+               Create new patient
+            </p>
+        </field>
+    </record>
+
+     <menuitem id="menu_custom_data_root"
+          name="Dental Clinic"
+          sequence="10"
+          web_icon="oao_dental_clinic_management/static/description/icon.png"/>
+
+
+    <menuitem id="menu_patient_data"
+              name="Patients"
+              parent="menu_custom_data_root"
+              action="action_patient"
+              sequence="20"/>
+</odoo>
