@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 
 class Patient(models.Model):
@@ -29,7 +29,7 @@ class Patient(models.Model):
     @api.depends('date_of_birth')
     def compute_age(self):
         if self.date_of_birth:
-            today = fields.Date.today()
+            today = datetime.now().date()
             age = today - self.date_of_birth
             age_in_years = age.days // 365.25
             self.age = f"{int(age_in_years)} Years Old"

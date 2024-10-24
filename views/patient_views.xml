@@ -36,7 +36,7 @@
                     <field name="image" widget="image" class="oe_avatar" />
                     <div class="oe_title">
                         <h1>
-                            Create new patient
+                            About Patient
                         </h1>
                     </div>
                     <group>
