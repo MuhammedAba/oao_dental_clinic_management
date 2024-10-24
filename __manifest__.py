@@ -10,7 +10,7 @@
     """,
     'author': 'ABA TECH GROUP',
     'website': 'https://omeraba.com/tr/blog/odoo-projeleri-23/dis-klinigi-yonetim-sistemi-48',
-    'depends': ['base', ],
+    'depends': ['base', 'mail' ],
     'data': [
         'views/patient_views.xml',
         'views/employee_type_views.xml',

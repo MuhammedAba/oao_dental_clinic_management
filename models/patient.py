@@ -4,6 +4,7 @@ from datetime import date, timedelta
 
 class Patient(models.Model):
     _name = "patient.patient"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Patients"
     _order = 'name desc'
 
