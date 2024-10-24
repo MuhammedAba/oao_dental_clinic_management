@@ -4,7 +4,7 @@
         <field name="name">patient.tree</field>
         <field name="model">patient.patient</field>
         <field name="arch" type="xml">
-            <tree string="Patient">
+            <tree string="Patient" delete="false">
                 <field name="patient_id"/>
                 <field name="name"/>
                 <field name="surname"/>
@@ -20,7 +20,7 @@
         <field name="name">patient.form</field>
         <field name="model">patient.patient</field>
         <field name="arch" type="xml">
-            <form string="Patient">
+            <form string="Patient" delete="false">
                 <sheet>
                     <field name="image" widget="image" class="oe_avatar" />
                     <div class="oe_title">
