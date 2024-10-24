@@ -16,6 +16,17 @@
         </field>
     </record>
 
+    <record id="view_patient_search_view" model="ir.ui.view">
+        <field name="name">patient.patient.search</field>
+        <field name="model">patient.patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+
     <record id="view_patient_form" model="ir.ui.view">
         <field name="name">patient.form</field>
         <field name="model">patient.patient</field>
@@ -40,6 +51,7 @@
                             <field name="phone"/>
                             <field name="email"/>
                             <field name="note"/>
+                            <field name="active" invisible="1"/>
                         </group>
                     </group>
 
@@ -71,6 +83,9 @@
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                     <field name="message_ids"/>
+                </div>
+                <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
+                    <span class="bg-danger">Archived</span>
                 </div>
             </form>
         </field>

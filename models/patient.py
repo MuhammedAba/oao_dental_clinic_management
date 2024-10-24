@@ -24,6 +24,7 @@ class Patient(models.Model):
         ('b-', 'B without Rh-factor'),
         ('b+', 'B with Rh-factor'),
     ], string="Blood Typing", required=1)
+    active = fields.Boolean(string="Active", default=True)
 
     @api.depends('date_of_birth')
     def compute_age(self):
