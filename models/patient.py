@@ -1,5 +1,6 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from datetime import date, timedelta, datetime
+from odoo.exceptions import ValidationError
 
 
 class Patient(models.Model):
@@ -26,6 +27,13 @@ class Patient(models.Model):
     ], string="Blood Typing", required=1)
     active = fields.Boolean(string="Active", default=True)
 
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = f"{rec.name} {rec.surname or ''}".strip()
+            result.append((rec.id, name))
+        return result
+
     @api.depends('date_of_birth')
     def compute_age(self):
         if self.date_of_birth:
@@ -50,3 +58,11 @@ class Patient(models.Model):
             vals['patient_id'] = f'PAT{str(new_id).zfill(5)}'  # PAT00001 gibi
 
         return super(Patient, self).create(vals)
+
+    @api.constrains('date_of_birth')
+    def validation_date_of_birth(self):
+        today = datetime.now().date()
+        for rec in self:
+            if rec.date_of_birth:
+                if rec.date_of_birth > today:
+                    raise ValidationError(_("Invalid Date of Birth"))
