@@ -31,7 +31,7 @@
         <field name="name">patient.form</field>
         <field name="model">patient.patient</field>
         <field name="arch" type="xml">
-            <form string="Patient" delete="false">
+            <form string="Patient" delete="false" duplicate="false">
                 <sheet>
                     <field name="image" widget="image" class="oe_avatar" />
                     <div class="oe_title">
