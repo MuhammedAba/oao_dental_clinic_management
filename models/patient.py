@@ -46,7 +46,15 @@ class Patient(models.Model):
 
     @api.model
     def create(self, vals):
-        # Eğer patient_id boşsa
+        existing_patient = self.search([
+            ('name', '=', vals.get('name')),
+            ('surname', '=', vals.get('surname')),
+            ('date_of_birth', '=', vals.get('date_of_birth'))
+        ], limit=1)
+
+        if existing_patient:
+            raise ValidationError(_("A patient with the same name,surname, date of birth already exists."))
+
         if not vals.get('patient_id'):
             # SQL ile mevcut en yüksek patient_id'yi alıyoruz
             self._cr.execute(
