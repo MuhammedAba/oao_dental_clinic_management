@@ -14,6 +14,7 @@
     'data': [
         'views/patient_views.xml',
         'views/employee_type_views.xml',
+        'views/patient_appointment_views.xml',
         'security/ir.model.access.csv',
         'data/employee.type.csv',
     ],
