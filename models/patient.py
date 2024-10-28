@@ -63,7 +63,7 @@ class Patient(models.Model):
         ], limit=1)
 
         if existing_patient:
-            raise ValidationError(_("A patient with the same name,surname, date of birth already exists."))
+            raise ValidationError(_("A patient with the same name, surname and date of birth already exists."))
 
         if not vals.get('patient_id'):
             # SQL ile mevcut en yüksek patient_id'yi alıyoruz
