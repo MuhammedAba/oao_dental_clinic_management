@@ -1,6 +1,7 @@
 from odoo import api, fields, models, _
 from datetime import date, timedelta, datetime
 from odoo.exceptions import ValidationError
+import re
 
 
 class Patient(models.Model):
@@ -83,3 +84,11 @@ class Patient(models.Model):
             if rec.date_of_birth:
                 if rec.date_of_birth > today:
                     raise ValidationError(_("Invalid Date of Birth"))
+
+    @api.constrains('phone')
+    def _validation_phone(self):
+        # 10 haneli telefon numarası doğrulama
+        for record in self:
+            if not re.match(r"^[1-9][0-9]{9}$", record.phone):
+                raise ValidationError(
+                    _("Invalid phone number. Please enter a 10-digit phone number without spaces or special characters."))
