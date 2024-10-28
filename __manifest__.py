@@ -18,6 +18,7 @@
         'views/employee_type_views.xml',
         'views/patient_appointment_views.xml',
         'views/scheduled_actions.xml',
+        'data/data.xml',
 
     ],
     'sequence': '-1',
