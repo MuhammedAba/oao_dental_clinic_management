@@ -1,6 +1,7 @@
 from odoo import api, fields, models, _
 from datetime import date, timedelta, datetime
 from odoo.exceptions import ValidationError
+import re
 
 
 class Patient(models.Model):
@@ -10,21 +11,24 @@ class Patient(models.Model):
     _order = 'name desc'
 
     patient_id = fields.Char(string="Patient ID", readonly=True, copy=False, default="New Patient")
-    name = fields.Char(string="Patient Name", required=1)
-    surname = fields.Char(string="Patient Surname", required=1)
-    date_of_birth = fields.Date(string='Date Of Birth', default=date.today(), required=1)
-    age = fields.Char(string='Age In Years', compute="compute_age", store=True)
+    name = fields.Char(string="Patient Name", required=True)
+    surname = fields.Char(string="Patient Surname", required=True)
+    date_of_birth = fields.Date(string='Date Of Birth', default=date.today(), required=True)
+    age = fields.Integer(string='Age In Years', compute="_compute_age", store=True)
     image = fields.Image(string="Image")
-    gender = fields.Selection([('male', "Male"), ('female', 'Female')], string='Gender', default='male')
+    gender = fields.Selection([
+        ('male', "Male"),
+        ('female', 'Female')
+    ], string='Gender', default='male')
     note = fields.Text(string="Description")
-    phone = fields.Char(string="Phone", required=1)
+    phone = fields.Char(string="Phone", required=True)
     email = fields.Char(string="Email")
     blood_type = fields.Selection([
         ('a-', 'A without Rh-factor'),
         ('a+', 'A with Rh-factor'),
         ('b-', 'B without Rh-factor'),
         ('b+', 'B with Rh-factor'),
-    ], string="Blood Typing", required=1)
+    ], string="Blood Typing", required=True)
     active = fields.Boolean(string="Active", default=True)
 
     def name_get(self):
@@ -35,14 +39,20 @@ class Patient(models.Model):
         return result
 
     @api.depends('date_of_birth')
-    def compute_age(self):
+    def _compute_age(self):
         if self.date_of_birth:
             today = datetime.now().date()
             age = today - self.date_of_birth
             age_in_years = age.days // 365.25
-            self.age = f"{int(age_in_years)} Years Old"
+            self.age = int(age_in_years)
         else:
-            self.age = "No Date of Birth"
+            self.age = 0
+
+    @api.model
+    def _cron_update_ages(self):
+        records = self.search([])
+        for record in records:
+            record._compute_age()
 
     @api.model
     def create(self, vals):
@@ -53,7 +63,7 @@ class Patient(models.Model):
         ], limit=1)
 
         if existing_patient:
-            raise ValidationError(_("A patient with the same name,surname, date of birth already exists."))
+            raise ValidationError(_("A patient with the same name, surname and date of birth already exists."))
 
         if not vals.get('patient_id'):
             # SQL ile mevcut en yüksek patient_id'yi alıyoruz
@@ -74,3 +84,11 @@ class Patient(models.Model):
             if rec.date_of_birth:
                 if rec.date_of_birth > today:
                     raise ValidationError(_("Invalid Date of Birth"))
+
+    @api.constrains('phone')
+    def _validation_phone(self):
+        # 10 haneli telefon numarası doğrulama
+        for record in self:
+            if not re.match(r"^[1-9][0-9]{9}$", record.phone):
+                raise ValidationError(
+                    _("Invalid phone number. Please enter a 10-digit phone number without spaces or special characters."))
