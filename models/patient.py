@@ -10,21 +10,24 @@ class Patient(models.Model):
     _order = 'name desc'
 
     patient_id = fields.Char(string="Patient ID", readonly=True, copy=False, default="New Patient")
-    name = fields.Char(string="Patient Name", required=1)
-    surname = fields.Char(string="Patient Surname", required=1)
-    date_of_birth = fields.Date(string='Date Of Birth', default=date.today(), required=1)
-    age = fields.Char(string='Age In Years', compute="compute_age", store=True)
+    name = fields.Char(string="Patient Name", required=True)
+    surname = fields.Char(string="Patient Surname", required=True)
+    date_of_birth = fields.Date(string='Date Of Birth', default=date.today(), required=True)
+    age = fields.Integer(string='Age In Years', compute="_compute_age", store=True)
     image = fields.Image(string="Image")
-    gender = fields.Selection([('male', "Male"), ('female', 'Female')], string='Gender', default='male')
+    gender = fields.Selection([
+        ('male', "Male"),
+        ('female', 'Female')
+    ], string='Gender', default='male')
     note = fields.Text(string="Description")
-    phone = fields.Char(string="Phone", required=1)
+    phone = fields.Char(string="Phone", required=True)
     email = fields.Char(string="Email")
     blood_type = fields.Selection([
         ('a-', 'A without Rh-factor'),
         ('a+', 'A with Rh-factor'),
         ('b-', 'B without Rh-factor'),
         ('b+', 'B with Rh-factor'),
-    ], string="Blood Typing", required=1)
+    ], string="Blood Typing", required=True)
     active = fields.Boolean(string="Active", default=True)
 
     def name_get(self):
@@ -35,14 +38,20 @@ class Patient(models.Model):
         return result
 
     @api.depends('date_of_birth')
-    def compute_age(self):
+    def _compute_age(self):
         if self.date_of_birth:
             today = datetime.now().date()
             age = today - self.date_of_birth
             age_in_years = age.days // 365.25
-            self.age = f"{int(age_in_years)} Years Old"
+            self.age = int(age_in_years)
         else:
-            self.age = "No Date of Birth"
+            self.age = 0
+
+    @api.model
+    def _cron_update_ages(self):
+        records = self.search([])
+        for record in records:
+            record._compute_age()
 
     @api.model
     def create(self, vals):

@@ -1,4 +1,6 @@
 id,name
-employee_type1,Doktor
-employee_type2,Asistan
-employee_type3,Temizlik Görevlisi
+1,Doctor
+2,Assistant
+3,Cleaner
+4,Secretary
+5,Accountant
