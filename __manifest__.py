@@ -12,12 +12,14 @@
     'website': 'https://omeraba.com/tr/blog/odoo-projeleri-23/dis-klinigi-yonetim-sistemi-48',
     'depends': ['base', 'mail' ],
     'data': [
-        'views/patient_views.xml',
-        'views/employee_type_views.xml',
         'security/ir.model.access.csv',
         'data/employee.type.csv',
+        'views/patient_views.xml',
+        'views/employee_type_views.xml',
+        'views/patient_appointment_views.xml',
+        'views/scheduled_actions.xml',
+
     ],
-    # 'images': ['static/src/description/icon.png'],
     'sequence': '-1',
     'installable': True,
     'application': True,

@@ -1,1 +1,1 @@
-from . import patient, employee_type
+from . import patient, employee_type, patient_appointment
